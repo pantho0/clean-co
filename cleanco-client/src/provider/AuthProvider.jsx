@@ -10,7 +10,7 @@ import { auth } from "../config/firebase.config";
 export const AuthContext = createContext(null);
 
 const AuthProvider = ({children}) => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState('');
   const [isLoading, setIsLoading] = useState(true);
 
   const createUser = (email, password) => {
@@ -19,26 +19,32 @@ const AuthProvider = ({children}) => {
   };
 
   const login = (email, password) => {
+    setIsLoading(true);
     return signInWithEmailAndPassword(auth, email, password);
   };
 
   const logout = () =>{
+    setIsLoading(true);
     return signOut(auth)
   }
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      if (currentUser) {
         setUser(currentUser);
+        console.log('current user in the state', currentUser?.email);
         setIsLoading(false);
-      }else{
-        setUser(null);
-      }
+
     });
+
+    // const initialUser = auth.currentUser;
+    // if(initialUser){
+    //   setUser(initialUser);
+    //   setIsLoading(false);
+    // }
     return () => {
       return unsubscribe();
     };
-  }, []);
+  },[]);
 
   const values = {
     user,

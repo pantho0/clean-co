@@ -9,7 +9,7 @@ const PrivateRoute = ({children}) => {
         return <div className="flex justify-center items-center h-screen"><progress className="progress w-56"></progress></div>
     }
 
-    if(!user){
+    if(!user && !isLoading){
         return <Navigate to="/login"></Navigate>
     }
 
