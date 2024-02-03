@@ -1,5 +1,5 @@
 const express = require('express')
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const app = express()
 const port = 5000
 //cleanCo
@@ -29,6 +29,7 @@ async function run() {
     await client.connect();
 
     const serviceCollection = client.db('cleanCo').collection('services');
+    const bookingCollection = client.db('cleanCo').collection('bookings');
 
     app.get('/api/v1/services', async(req,res)=>{
         const cursor = serviceCollection.find();
@@ -36,10 +37,18 @@ async function run() {
         res.send(result)
     })
 
-    app.post('/api/v1/user-bookings', (req,res)=>{
-        console.log(req.body)
+    app.post('/api/v1/user-bookings', async(req,res)=>{
+        const booking = req.body;
+        const result = await bookingCollection.insertOne(booking)
+        res.send(result)
     })
 
+    app.delete('/api/v1/cancel-booking/:bookingID', async(req,res)=>{
+        const bookingId = req.params.bookingID;
+        const query = {_id : new ObjectId(bookingId)}
+        const result = await bookingCollection.deleteOne(query)
+        res.send(result)
+    })
 
 
     // Send a ping to confirm a successful connection
