@@ -30,7 +30,7 @@ const MainLayout = ({children}) => {
             </label>
           </div>
           <div className='w-full max-w-[1200px] mx-auto'>
-          <div className="flex-1 px-2 mx-2">Navbar Title</div>
+          <div className="flex-1">Navbar Title</div>
             <Navbar/>
           </div>
         </div>
