@@ -1,4 +1,6 @@
 import PropTypes from 'prop-types'; 
+import Navbar from './Navbar';
+import Sidebar from './Sidebar';
 const MainLayout = ({children}) => {
   return (
     <div className="drawer">
@@ -27,17 +29,9 @@ const MainLayout = ({children}) => {
               </svg>
             </label>
           </div>
+          <div className='w-full max-w-[1200px] mx-auto'>
           <div className="flex-1 px-2 mx-2">Navbar Title</div>
-          <div className="flex-none hidden lg:block">
-            <ul className="menu menu-horizontal">
-              {/* Navbar menu content here */}
-              <li>
-                <a>Navbar Item 1</a>
-              </li>
-              <li>
-                <a>Navbar Item 2</a>
-              </li>
-            </ul>
+            <Navbar/>
           </div>
         </div>
         {/* Page content here */}
@@ -49,15 +43,10 @@ const MainLayout = ({children}) => {
           aria-label="close sidebar"
           className="drawer-overlay"
         ></label>
-        <ul className="menu p-4 w-80 min-h-full bg-base-200">
+        <div className="menu p-4 w-80 min-h-full bg-base-200">
           {/* Sidebar content here */}
-          <li>
-            <a>Sidebar Item 1</a>
-          </li>
-          <li>
-            <a>Sidebar Item 2</a>
-          </li>
-        </ul>
+          <Sidebar/>
+        </div>
       </div>
     </div>
   );
