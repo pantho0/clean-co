@@ -83,13 +83,19 @@ async function run() {
         if(sortField && sortOrder){
           sortObj[sortField] = sortOrder
         }
-        console.log(category);
         if(category){
           query.category= category
         }
-        const cursor = serviceCollection.find(query).sort(sortObj);
+
+        //pagination
+        const page = Number(req.query.page);
+        const limit = Number(req.query.limit);
+        const skip = (page-1)*limit;
+        //find out total data
+        const total = await serviceCollection.countDocuments();
+        const cursor = serviceCollection.find(query).skip(skip).limit(limit).sort(sortObj);
         const result = await cursor.toArray()
-        res.send(result)
+        res.send({total, result})
     })
 
     app.get('/api/v1/user/bookings', gateman, async(req,res)=>{
