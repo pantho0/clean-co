@@ -1,8 +1,10 @@
 import { useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 import toast from "react-hot-toast";
+import useAxios from "../hooks/useAxios";
 
 const Login = () => {
+  const axiosPublic = useAxios()
     const {login} = useAuth()
     const navigate = useNavigate()
     const handleSubmit = async(e) =>{
@@ -12,7 +14,8 @@ const Login = () => {
         const email = form.email.value;
         const password = form.password.value;
         try {
-           await login(email, password)
+           const user = await login(email, password)
+           axiosPublic.post('/auth/access-token', {email: user.user.email})
            toast.success("Logged In", {id: toastID})
            navigate('/')
         } catch (error) {

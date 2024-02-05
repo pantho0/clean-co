@@ -1,7 +1,8 @@
 const express = require('express')
+const cors = require('cors');
+const cookieParser = require('cookie-parser')
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const jwt = require('jsonwebtoken');
-const cookieParser = require('cookie-parser')
 const app = express()
 const port = 5000
 
@@ -14,6 +15,10 @@ const secret = 'veryverysecretthings'
 //parser 
 app.use(express.json())
 app.use(cookieParser())
+app.use(cors({
+  origin : 'http://localhost:5173',
+  credentials : true
+}))
 
 
 
@@ -41,10 +46,11 @@ async function run() {
 
     app.post('/api/v1/auth/access-token', async(req,res)=>{
       const user = req.body;
+      console.log(user);
       const token = jwt.sign(user,secret, {expiresIn: 60 * 60});
       res.cookie('token',token,{
         httpOnly : true,
-        secure : false,
+        secure : true,
         sameSite : 'none'
       }).send({success:true})
     })
@@ -68,8 +74,20 @@ async function run() {
     }
 
 
-    app.get('/api/v1/services',gateman, async(req,res)=>{
-        const cursor = serviceCollection.find();
+    app.get('/api/v1/services', async(req,res)=>{
+        let query = {}
+        let sortObj ={}
+        const category = req.query.category;
+        const sortField = req.query.sortField;
+        const sortOrder = req.query.sortOrder;
+        if(sortField && sortOrder){
+          sortObj[sortField] = sortOrder
+        }
+        console.log(category);
+        if(category){
+          query.category= category
+        }
+        const cursor = serviceCollection.find(query).sort(sortObj);
         const result = await cursor.toArray()
         res.send(result)
     })
