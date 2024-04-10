@@ -75,7 +75,7 @@ const Services = () => {
             className="select select-primary w-full max-w-xs"
           >
             <option disabled >
-              Select One
+              Select One Service 
             </option>
             <option value={"asc"}>From Low To High</option>
             <option value={"desc"}>From High To Low</option>
